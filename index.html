@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Birthday Surprise</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    overflow: hidden;
+
+    background:
+        radial-gradient(ellipse at 20% 30%, #800040, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, #4b0082, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, #c2185b, transparent 50%),
+        #080008;
+
+    background-size: 200% 200%;
+    animation: gradientMove 13s ease-in-out infinite alternate;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 100%; }
+}
+
+/* PARTICLES */
+
+.particles {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.particle {
+    position: absolute;
+    bottom: -10px;
+    width: var(--size);
+    height: var(--size);
+    left: var(--left);
+    background: var(--glow);
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 8px var(--glow),
+        0 0 18px var(--glow),
+        0 0 35px var(--glow);
+
+    animation: floatUp var(--duration) linear var(--delay) infinite;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate3d(var(--drift), -110vh, 0);
+        opacity: 1;
+    }
+}
+
+/* MAIN BUTTON */
+
+.main-content {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.open-button {
+    background: linear-gradient(135deg, #ff4d94, #e60073);
+    color: #f5e6c8;
+
+    border: 1px solid #ffb6d5;
+    border-radius: 30px;
+
+    padding: 15px 38px;
+    font-size: 20px;
+    font-weight: bold;
+
+    box-shadow:
+        0 0 15px #ff4d94,
+        0 0 35px #ff0066;
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.open-button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 30px #ff4d94;
+}
+
+/* LETTER OVERLAY */
+
+.letter-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+
+    background: rgba(8, 0, 8, 0.78);
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.letter-overlay.show {
+    display: flex;
+}
+
+/* DECORATED LETTER */
+
+.letter {
+    position: relative;
+
+    width: 100%;
+    max-width: 430px;
+
+    background: linear-gradient(
+        145deg,
+        #3b102c,
+        #250d25,
+        #42102f
+    );
+
+    border: 2px solid #d98ba9;
+    border-radius: 18px;
+
+    padding: 35px 25px;
+
+    box-shadow:
+        0 0 20px rgba(255, 77, 148, 0.35),
+        inset 0 0 20px rgba(255, 192, 203, 0.08);
+
+    color: #f5e6c8;
+
+    animation: letterOpen 0.6s ease;
+}
+
+@keyframes letterOpen {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.letter::before {
+    content: "✿  ✧  ✿";
+    display: block;
+    text-align: center;
+    color: #ff85b3;
+    font-size: 25px;
+    margin-bottom: 18px;
+}
+
+.letter-title {
+    text-align: center;
+    color: #ff9fc5;
+    font-size: 25px;
+    margin-bottom: 22px;
+}
+
+.letter-text {
+    font-size: 16px;
+    line-height: 1.9;
+    text-align: justify;
+    color: #f5e6c8;
+}
+
+.letter-footer {
+    text-align: center;
+    margin-top: 25px;
+    color: #ff9fc5;
+    font-size: 23px;
+}
+
+.close-button {
+    display: block;
+    margin: 25px auto 0;
+
+    padding: 9px 25px;
+
+    background: #e83e83;
+    color: #f5e6c8;
+
+    border: none;
+    border-radius: 20px;
+
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    background: #ff65a0;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- PARTICLES -->
+
+<div class="particles" id="particles"></div>
+
+<!-- MAIN BUTTON -->
+
+<div class="main-content">
+
+    <button class="open-button" onclick="openLetter()">
+        একটা কথা!
+    </button>
+
+</div>
+
+<!-- LETTER -->
+
+<div class="letter-overlay" id="letterOverlay">
+
+    <div class="letter">
+
+        <h2 class="letter-title">একটা কথা! ♡</h2>
+
+        <p class="letter-text">
+            রিমি আমি জানতাম না যে থিমটা তুমি তোমার গ্যালারি থেকে
+            কাস্টোমাইজ করছ আর আমার কাছে থিমটা ভালো লাগছে কিন্তু
+            আমি তো সেটা জানতাম না তাই আমি ভাবছি কি এটা থিম গুলাতে
+            পাওয়া যাবে আর এইটা চেঞ্জ করছিলাম কারণ আমি থিম গুলাতে
+            ঘাঁটাঘাঁটি করিয়াছিলাম আর একটা সুন্দর লাগলো তাই সিলেক্ট
+            কইরা দিলাম কিন্তু আমি আবার চেঞ্জ করতে চাইছিলাম কিন্তু
+            আর পাইনাই পরে বুঝলাম এটা তুমি কাস্টোমাইজ করছিলা।🥺
+            আমি দুঃখিত।btw তোমার ছবিতো দেইখা আমার অনেক ভালো লাগছে😩
+                          শাড়িতে তুমি মাশাআল্লাহ
+        </p>
+
+        <div class="letter-footer">
+            ✧ ♡ ✧
+        </div>
+
+        
+        
+
+    </div>
+
+</div>
+
+<script>
+
+// PARTICLES
+
+const container = document.getElementById("particles");
+
+const particleCount = 35;
+
+const colors = [
+    "#ff4da6",
+    "#ff0066",
+    "#c77dff",
+    "#b026ff",
+    "#ff85c0"
+];
+
+for (let i = 0; i < particleCount; i++) {
+
+    const particle = document.createElement("span");
+
+    particle.className = "particle";
+
+    const size = Math.random() * 6 + 3;
+    const left = Math.random() * 100;
+    const duration = Math.random() * 3 + 2;
+    const delay = Math.random() * 10;
+    const drift = (Math.random() - 0.5) * 100;
+
+    const color = colors[
+        Math.floor(Math.random() * colors.length)
+    ];
+
+    particle.style.setProperty("--size", size + "px");
+    particle.style.setProperty("--left", left + "%");
+    particle.style.setProperty("--duration", duration + "s");
+    particle.style.setProperty("--delay", delay + "s");
+    particle.style.setProperty("--drift", drift + "px");
+    particle.style.setProperty("--glow", color);
+
+    container.appendChild(particle);
+}
+
+// OPEN LETTER
+
+function openLetter() {
+    document.getElementById("letterOverlay").classList.add("show");
+}
+
+
+</script>
+
+</body>
+</html>
